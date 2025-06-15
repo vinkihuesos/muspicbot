@@ -8,7 +8,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.memory import MemoryStorage
 from image_generator import generate_images
 from aiogram.types import BufferedInputFile
-from os import remove
+from aiogram.types import InputMediaPhoto
 
 API_TOKEN = '7747562799:AAH3ip_M9ImM2KZLublIJMYPSZ-ftUoM74Q'
 
@@ -79,8 +79,12 @@ async def get_lyrics(message: types.Message, state: FSMContext):
         bot_username='@MUSICPICBOT'
     )
 
-    await message.answer_photo(BufferedInputFile(output1.read(), filename="output1.jpg"))
-    await message.answer_photo(BufferedInputFile(output2.read(), filename="output2.jpg"))
+    media = [
+        InputMediaPhoto(media=BufferedInputFile(output1.read(), filename="output1.jpg")),
+        InputMediaPhoto(media=BufferedInputFile(output2.read(), filename="output2.jpg")),
+    ]
+
+    await message.answer_media_group(media)  # type: ignore
     await message.answer(
         "✅ *Готово!*\n\n📌 Чтобы создать ещё обложку, отправь */start*",
         parse_mode="Markdown"
